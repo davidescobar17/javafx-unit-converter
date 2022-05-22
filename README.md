@@ -2,6 +2,10 @@
 
 Application which allows the user to convert values into other units.
 
+## Demo
+
+![demo](./demo/demo.gif)
+
 ## Built With
   - JavaFX
   - Maven
