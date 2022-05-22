@@ -65,6 +65,7 @@ public class HelloApplication extends Application {
         // convert button column contents
         Label toLabel = new Label("To");
         Button convertButton = new Button("Convert");
+        Button swapSidesButton = new Button("<->");
 
         // converted value column contents
         TextField toTextField = new TextField();
@@ -84,6 +85,10 @@ public class HelloApplication extends Application {
                 convertValue(fromTextField.getText(), toTextField, fromIndex, toIndex);
             }
         });
+
+        // add action to swap sides button
+        swapSidesButton.setOnAction(e -> swapSides(fromTextField, fromComboBox,
+                toTextField, toComboBox, fromIndex, toIndex));
 
         // track changes to the ComboBoxes
 
@@ -111,9 +116,11 @@ public class HelloApplication extends Application {
 
         // add elements for convert button column in GridPane layout
         layout.add(convertButton, 1, 1);
+        layout.add(swapSidesButton, 1, 2);
         layout.setHalignment(convertButton, HPos.CENTER);
 
         // add elements for converted value column in GridPane layout
+        layout.setHalignment(swapSidesButton, HPos.CENTER);
         layout.add(toLabel, 2, 0);
         layout.add(toTextField, 2, 1);
         layout.add(toComboBox, 2, 2);
@@ -127,7 +134,7 @@ public class HelloApplication extends Application {
         window.show();
     }
 
-    // converts from original value and units to selected converted units and displays result
+    // converts from original value and units to selected converted unit and displays result
     private boolean convertValue(String input, TextField output, int fromIndex, int toIndex){
 
         try {
@@ -147,6 +154,38 @@ public class HelloApplication extends Application {
             }
 
             return false;
+        }
+    }
+
+    // swaps original value and units with converted value and units
+    private void swapSides(TextField fromTextField, ComboBox fromComboBox,
+                           TextField toTextField, ComboBox toComboBox,
+                           int fromIndex, int toIndex){
+
+        int tempFromIndex = fromIndex;
+
+        String tempFromInput = fromTextField.getText();
+        fromComboBox.getSelectionModel().select(toIndex);
+        toComboBox.getSelectionModel().select(tempFromIndex);
+
+        boolean isValid = !toTextField.getText().equals("NaN");
+
+        // if NaN is present, clear values
+        // otherwise swap the values normally
+        if (isValid) {
+
+            fromTextField.setText(toTextField.getText());
+            toTextField.setText(tempFromInput);
+
+            if (!tempFromInput.contains(".")) {
+
+                toTextField.setText(tempFromInput + ".0");
+            }
+        }
+        else {
+
+            fromTextField.setText("");
+            toTextField.setText("");
         }
     }
 }
